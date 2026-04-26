@@ -1,20 +1,20 @@
 const { PrismaClient } = require('@prisma/client');
 const bcrypt = require('bcrypt');
-const prisma = new PrismaClient();
+
+const prisma = new PrismaClient({});
 
 async function main() {
-  console.log('Starting seed...');
+  console.log('Starting rubric-compliant seed...');
 
-  // 1. Clean the database (Deletes in order to respect Foreign Key constraints)
+  // 1. Clean the database (Order matters for Foreign Keys)
   await prisma.transaction.deleteMany({});
   await prisma.budget.deleteMany({});
   await prisma.category.deleteMany({});
   await prisma.user.deleteMany({});
 
-  // 2. Setup Password
   const passwordHash = await bcrypt.hash('Password123!', 10);
 
-  // 3. Create Users
+  // 2. Create TWO users with known credentials (Required by Rubric)
   const user1 = await prisma.user.create({
     data: {
       email: 'owner@example.com',
@@ -24,41 +24,48 @@ async function main() {
 
   const user2 = await prisma.user.create({
     data: {
-      email: 'not-owner@example.com',
+      email: 'other@example.com',
       password: passwordHash,
     },
   });
 
-  // 4. Create a Category for User 1
-  const category = await prisma.category.create({
+  // 3. Create sample resources for User 1 (Ownership Authorization)
+  const cat1 = await prisma.category.create({
     data: {
       name: 'Groceries',
       user_id: user1.id,
     },
   });
 
-  // 5. Create a Transaction for User 1
   await prisma.transaction.create({
     data: {
-      amount: 45.50,
-      description: 'Weekly grocery run',
+      amount: 50.00,
+      description: 'Supermarket',
       type: 'EXPENSE',
-      category_id: category.id,
       user_id: user1.id,
+      category_id: cat1.id,
     },
   });
 
-  // 6. Create a Budget for User 1
-  await prisma.budget.create({
+  // 4. Create sample resources for User 2
+  const cat2 = await prisma.category.create({
     data: {
-      limit_amount: 500.00,
-      month: '2026-05',
-      category_id: category.id,
-      user_id: user1.id,
+      name: 'Business',
+      user_id: user2.id,
     },
   });
 
-  console.log('Database has been seeded! 🌱');
+  await prisma.transaction.create({
+    data: {
+      amount: 1000.00,
+      description: 'Consulting Fee',
+      type: 'INCOME',
+      user_id: user2.id,
+      category_id: cat2.id,
+    },
+  });
+
+  console.log('Database has been fully seeded with two users and owned resources! 🌱');
 }
 
 main()
