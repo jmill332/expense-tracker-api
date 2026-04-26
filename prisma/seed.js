@@ -1,7 +1,16 @@
 const { PrismaClient } = require('@prisma/client');
 const bcrypt = require('bcrypt');
+const dotenv = require('dotenv');
 
-const prisma = new PrismaClient({});
+dotenv.config();
+
+const prisma = new PrismaClient({
+    datasources: {
+        db: {
+            url: process.env.DATABASE_URL,
+        },
+    },
+});
 
 async function main() {
   console.log('Starting rubric-compliant seed...');
