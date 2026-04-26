@@ -15,7 +15,6 @@ const prisma = new PrismaClient({
 async function main() {
   console.log('Starting rubric-compliant seed...');
 
-  // 1. Clean the database (Order matters for Foreign Keys)
   await prisma.transaction.deleteMany({});
   await prisma.budget.deleteMany({});
   await prisma.category.deleteMany({});
@@ -23,7 +22,6 @@ async function main() {
 
   const passwordHash = await bcrypt.hash('Password123!', 10);
 
-  // 2. Create TWO users with known credentials (Required by Rubric)
   const user1 = await prisma.user.create({
     data: {
       email: 'owner@example.com',
@@ -38,7 +36,6 @@ async function main() {
     },
   });
 
-  // 3. Create sample resources for User 1 (Ownership Authorization)
   const cat1 = await prisma.category.create({
     data: {
       name: 'Groceries',
@@ -56,7 +53,6 @@ async function main() {
     },
   });
 
-  // 4. Create sample resources for User 2
   const cat2 = await prisma.category.create({
     data: {
       name: 'Business',
@@ -69,6 +65,26 @@ async function main() {
       amount: 1000.00,
       description: 'Consulting Fee',
       type: 'INCOME',
+      user_id: user2.id,
+      category_id: cat2.id,
+    },
+  });
+
+  await prisma.budget.create({
+    data: {
+      amount: 500.00,
+      month: 5,
+      year: 2024,
+      user_id: user1.id,
+      category_id: cat1.id, 
+    },
+  });
+
+  await prisma.budget.create({
+    data: {
+      amount: 2000.00,
+      month: 6,
+      year: 2024,
       user_id: user2.id,
       category_id: cat2.id,
     },
