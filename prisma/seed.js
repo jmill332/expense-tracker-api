@@ -72,9 +72,8 @@ async function main() {
 
   await prisma.budget.create({
     data: {
-      amount: 500.00,
-      month: 5,
-      year: 2024,
+      limit_amount: 500.00,
+      month: "5",
       user_id: user1.id,
       category_id: cat1.id, 
     },
@@ -82,9 +81,8 @@ async function main() {
 
   await prisma.budget.create({
     data: {
-      amount: 2000.00,
-      month: 6,
-      year: 2024,
+      limit_amount: 2000.00,
+      month: "6",
       user_id: user2.id,
       category_id: cat2.id,
     },
