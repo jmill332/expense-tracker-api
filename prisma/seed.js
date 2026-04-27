@@ -53,6 +53,16 @@ async function main() {
     },
   });
 
+  await prisma.transaction.create({
+    data: {
+      amount: 250.00,
+      description: 'Restaurant',
+      type: 'EXPENSE',
+      user_id: user1.id,
+      category_id: cat1.id,
+    },
+  });
+
   const cat2 = await prisma.category.create({
     data: {
       name: 'Business',
