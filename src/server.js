@@ -35,10 +35,7 @@ const swaggerOptions = {
           properties: {
             id: { type: 'integer', example: 1 },
             amount: { type: 'number', example: 50.00 },
-            description: { type: 'string', example: 'Grocery shopping' },
-            category_id: { type: 'integer', example: 2 },
             type: { type: 'string', enum: ['INCOME', 'EXPENSE'], example: 'EXPENSE' },
-            user_id: { type: 'integer', example: 1 }
           }
         },
         Category: {
@@ -47,7 +44,6 @@ const swaggerOptions = {
           properties: {
             id: { type: 'integer', example: 1 },
             name: { type: 'string', example: 'Food & Dining' },
-            user_id: { type: 'integer', example: 1 }
           }
         },
         Budget: {
@@ -57,8 +53,6 @@ const swaggerOptions = {
             id: { type: 'integer', example: 1 },
             limit_amount: { type: 'number', example: 500.00 },
             month: { type: 'string', example: '2026-05' },
-            category_id: { type: 'integer', example: 1 },
-            user_id: { type: 'integer', example: 1 }
           }
         },
         AuthRequest: {
